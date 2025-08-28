@@ -6,6 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Eye, EyeOff } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import edupulseLogo from "@/assets/edupulse-logo.png";
 
 interface LoginPageProps {
@@ -34,15 +35,34 @@ const LoginPage = ({ onLogin }: LoginPageProps) => {
 
     setIsLoading(true);
     
-    // Simulate authentication
-    setTimeout(() => {
-      setIsLoading(false);
-      toast({
-        title: "Welcome to EduPulse AI",
-        description: "Login successful! Redirecting to dashboard...",
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
       });
-      onLogin();
-    }, 1500);
+
+      if (error) {
+        toast({
+          variant: "destructive",
+          title: "Login Failed",
+          description: error.message,
+        });
+      } else if (data.user) {
+        toast({
+          title: "Welcome to EduPulse AI",
+          description: "Login successful! Redirecting to dashboard...",
+        });
+        onLogin();
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Login Error",
+        description: "An unexpected error occurred. Please try again.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

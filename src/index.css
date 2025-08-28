@@ -74,9 +74,9 @@ All colors MUST be HSL.
     @apply bg-background text-foreground font-sans;
   }
 
-  /* Dark theme by default */
+  /* Dark theme by default - using class instead of @apply */
   html {
-    @apply dark;
+    color-scheme: dark;
   }
 
   /* Smooth scrolling */
