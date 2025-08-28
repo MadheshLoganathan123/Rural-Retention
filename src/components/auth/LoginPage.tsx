@@ -16,9 +16,12 @@ interface LoginPageProps {
 const LoginPage = ({ onLogin }: LoginPageProps) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -33,31 +36,77 @@ const LoginPage = ({ onLogin }: LoginPageProps) => {
       return;
     }
 
+    if (isSignUp && password !== confirmPassword) {
+      toast({
+        variant: "destructive",
+        title: "Passwords Don't Match",
+        description: "Please make sure both passwords match.",
+      });
+      return;
+    }
+
+    if (isSignUp && password.length < 6) {
+      toast({
+        variant: "destructive",
+        title: "Password Too Short",
+        description: "Password must be at least 6 characters long.",
+      });
+      return;
+    }
+
     setIsLoading(true);
     
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: email,
-        password: password,
-      });
+      if (isSignUp) {
+        const redirectUrl = `${window.location.origin}/`;
+        const { data, error } = await supabase.auth.signUp({
+          email: email,
+          password: password,
+          options: {
+            emailRedirectTo: redirectUrl
+          }
+        });
 
-      if (error) {
-        toast({
-          variant: "destructive",
-          title: "Login Failed",
-          description: error.message,
+        if (error) {
+          toast({
+            variant: "destructive",
+            title: "Sign Up Failed",
+            description: error.message,
+          });
+        } else if (data.user) {
+          toast({
+            title: "Account Created!",
+            description: "Please check your email to verify your account.",
+          });
+          // Switch to login mode after successful signup
+          setIsSignUp(false);
+          setPassword("");
+          setConfirmPassword("");
+        }
+      } else {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: email,
+          password: password,
         });
-      } else if (data.user) {
-        toast({
-          title: "Welcome to EduPulse AI",
-          description: "Login successful! Redirecting to dashboard...",
-        });
-        onLogin();
+
+        if (error) {
+          toast({
+            variant: "destructive",
+            title: "Login Failed",
+            description: error.message,
+          });
+        } else if (data.user) {
+          toast({
+            title: "Welcome to EduPulse AI",
+            description: "Login successful! Redirecting to dashboard...",
+          });
+          onLogin();
+        }
       }
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Login Error",
+        title: isSignUp ? "Sign Up Error" : "Login Error",
         description: "An unexpected error occurred. Please try again.",
       });
     } finally {
@@ -79,12 +128,17 @@ const LoginPage = ({ onLogin }: LoginPageProps) => {
           <p className="text-muted-foreground mt-2">Sign in to access your AI teaching tools</p>
         </div>
 
-        {/* Login Form */}
+        {/* Auth Form */}
         <Card className="bg-gradient-card border-border">
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl text-center">Teacher Login</CardTitle>
+            <CardTitle className="text-2xl text-center">
+              {isSignUp ? "Create Teacher Account" : "Teacher Login"}
+            </CardTitle>
             <CardDescription className="text-center">
-              Enter your credentials to access the portal
+              {isSignUp 
+                ? "Sign up to access EduPulse AI teaching tools" 
+                : "Enter your credentials to access the portal"
+              }
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -128,28 +182,58 @@ const LoginPage = ({ onLogin }: LoginPageProps) => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="remember"
-                    checked={rememberMe}
-                    onCheckedChange={(checked) => setRememberMe(checked as boolean)}
-                  />
-                  <Label 
-                    htmlFor="remember" 
-                    className="text-sm text-muted-foreground cursor-pointer"
-                  >
-                    Remember me
-                  </Label>
+              {isSignUp && (
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword" className="text-foreground">Confirm Password</Label>
+                  <div className="relative">
+                    <Input
+                      id="confirmPassword"
+                      type={showConfirmPassword ? "text" : "password"}
+                      placeholder="Confirm your password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      className="bg-input border-border text-foreground placeholder:text-muted-foreground pr-10"
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-0 flex items-center pr-3"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-4 w-4 text-muted-foreground" />
+                      ) : (
+                        <Eye className="h-4 w-4 text-muted-foreground" />
+                      )}
+                    </button>
+                  </div>
                 </div>
-                
-                <Button 
-                  variant="link" 
-                  className="px-0 text-primary hover:text-primary-hover"
-                >
-                  Forgot password?
-                </Button>
-              </div>
+              )}
+
+              {!isSignUp && (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="remember"
+                      checked={rememberMe}
+                      onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+                    />
+                    <Label 
+                      htmlFor="remember" 
+                      className="text-sm text-muted-foreground cursor-pointer"
+                    >
+                      Remember me
+                    </Label>
+                  </div>
+                  
+                  <Button 
+                    variant="link" 
+                    className="px-0 text-primary hover:text-primary-hover"
+                  >
+                    Forgot password?
+                  </Button>
+                </div>
+              )}
 
               <Button
                 type="submit"
@@ -159,13 +243,32 @@ const LoginPage = ({ onLogin }: LoginPageProps) => {
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Signing in...
+                    {isSignUp ? "Creating Account..." : "Signing in..."}
                   </>
                 ) : (
-                  "Sign In"
+                  isSignUp ? "Create Account" : "Sign In"
                 )}
               </Button>
             </form>
+            
+            {/* Toggle between login and signup */}
+            <div className="text-center pt-4 border-t border-border">
+              <p className="text-sm text-muted-foreground">
+                {isSignUp ? "Already have an account?" : "Don't have an account?"}
+              </p>
+              <Button
+                type="button"
+                variant="link"
+                className="text-primary hover:text-primary-hover font-medium"
+                onClick={() => {
+                  setIsSignUp(!isSignUp);
+                  setPassword("");
+                  setConfirmPassword("");
+                }}
+              >
+                {isSignUp ? "Sign in here" : "Create account"}
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
