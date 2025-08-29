@@ -22,9 +22,9 @@ const ApplicationFrame = ({ title, url, isActive }: ApplicationFrameProps) => {
   if (!isActive) return null;
 
   return (
-    <div className="flex-1 h-full relative">
+    <div className="flex-1 h-full relative flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 bg-card border-b border-border">
+      <div className="flex items-center justify-between p-4 bg-card border-b border-border flex-shrink-0">
         <h2 className="text-lg font-semibold text-foreground">{title}</h2>
         <Button
           variant="outline"
@@ -47,15 +47,17 @@ const ApplicationFrame = ({ title, url, isActive }: ApplicationFrameProps) => {
         </div>
       )}
 
-      {/* Iframe */}
-      <iframe
-        src={url}
-        title={title}
-        className="w-full h-[calc(100%-73px)] border-0"
-        onLoad={handleLoad}
-        onError={handleError}
-        sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
-      />
+      {/* Iframe Container with perfect alignment */}
+      <div className="iframe-container w-full h-full flex items-stretch">
+        <iframe
+          src={url}
+          title={title}
+          onLoad={handleLoad}
+          onError={handleError}
+          sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
+          className="w-full h-full border-0"
+        />
+      </div>
     </div>
   );
 };

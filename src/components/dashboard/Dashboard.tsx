@@ -22,7 +22,7 @@ const Dashboard = ({ onLogout }: DashboardProps) => {
   const currentApp = applications.find(app => app.id === activeApp);
 
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="dashboard-container bg-background flex">
       <DashboardSidebar 
         activeApp={activeApp}
         onAppSelect={setActiveApp}

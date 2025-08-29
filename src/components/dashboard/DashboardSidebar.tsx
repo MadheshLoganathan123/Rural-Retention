@@ -13,51 +13,8 @@ import {
 import { useIsMobile } from "@/hooks/use-mobile";
 import edupulseLogo from "@/assets/edupulse-logo.png";
 
-export interface Application {
-  id: string;
-  title: string;
-  url: string;
-  icon: React.ComponentType<{ className?: string }>;
-  description: string;
-}
-
-export const applications: Application[] = [
-  {
-    id: 'pedagogy',
-    title: 'AI Pedagogy Library',
-    url: 'https://v0-rural-teacher-resource-app.vercel.app/',
-    icon: BookOpen,
-    description: 'Access teaching resources and methodologies'
-  },
-  {
-    id: 'feedback',
-    title: 'Data Driven Feedback System',
-    url: 'https://educator-lens.lovable.app',
-    icon: BarChart3,
-    description: 'Analyze student performance and feedback'
-  },
-  {
-    id: 'travel',
-    title: 'Teacher Travel & Safety Assistant',
-    url: 'https://teachtrav-qftkvv.manus.space/',
-    icon: MapPin,
-    description: 'Plan safe educational trips and excursions'
-  },
-  {
-    id: 'lesson',
-    title: 'Local Context Lesson Generator',
-    url: 'https://local-context-lesson-ylic.bolt.host/',
-    icon: Lightbulb,
-    description: 'Create contextually relevant lesson plans'
-  },
-  {
-    id: 'classifier',
-    title: 'AI Teacher Classifier',
-    url: 'https://teacher-scout.lovable.app/',
-    icon: Users,
-    description: 'Classify and organize teaching resources'
-  }
-];
+// Remove Application interface and applications constant from this file
+import { applications, Application } from "./applications";
 
 interface DashboardSidebarProps {
   activeApp: string;
@@ -120,9 +77,9 @@ const DashboardSidebar = ({ activeApp, onAppSelect, onLogout }: DashboardSidebar
       )}
 
       {/* Sidebar */}
-      <div className={`${sidebarClass} bg-sidebar border-r border-sidebar-border flex flex-col`}>
+      <div className={`${sidebarClass} bg-sidebar border-r border-sidebar-border flex flex-col items-start`}> {/* Fix alignment */}
         {/* Header */}
-        <div className="p-4 border-b border-sidebar-border">
+        <div className="p-4 border-b border-sidebar-border w-full">
           <div className="flex items-center gap-3">
             <img 
               src={edupulseLogo} 
@@ -130,13 +87,12 @@ const DashboardSidebar = ({ activeApp, onAppSelect, onLogout }: DashboardSidebar
               className="h-8 w-auto"
             />
             {!isCollapsed && (
-              <div>
+              <div className="flex flex-col">
                 <h1 className="text-lg font-bold text-sidebar-foreground">EduPulse AI</h1>
                 <p className="text-xs text-sidebar-foreground/70">Teacher Portal</p>
               </div>
             )}
           </div>
-          
           {!isMobile && (
             <Button
               variant="ghost"
