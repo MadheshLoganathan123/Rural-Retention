@@ -27,8 +27,8 @@ Tailwind CSS – utility-first CSS framework
 
 Getting Started
 1. Clone the Repository
-git clone <YOUR_GIT_URL>
-cd <YOUR_PROJECT_NAME>
+git clone <"https://github.com/MadheshLoganathan123/Rural-Retention">
+cd <Rural-Retention>
 
 2. Install Dependencies
 npm install
