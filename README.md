@@ -1,4 +1,4 @@
-                                                                                                                                                                  EduPulse AI is a unified portal for teachers to access AI-powered educational tools.
+EduPulse AI is a unified portal for teachers to access AI-powered educational tools.
 It provides authentication, a dark-themed UI, and supports features that enhance teaching, feedback, and growth.
 
 Features
