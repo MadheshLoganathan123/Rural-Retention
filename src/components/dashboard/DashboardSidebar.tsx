@@ -127,7 +127,8 @@ const DashboardSidebar = ({ activeApp, onAppSelect, onLogout }: DashboardSidebar
                 {!isCollapsed && (
                   <div className="text-left">
                     <div className="font-medium text-sm">{app.title}</div>
-                    <div className="text-xs opacity-70">{app.description}</div>
+                    {/* Description removed or shortened */}
+                    {/* <div className="text-xs opacity-70">{app.description.slice(0, 20)}...</div> */}
                   </div>
                 )}
               </Button>

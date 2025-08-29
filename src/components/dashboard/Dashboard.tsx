@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import DashboardSidebar, { applications } from "./DashboardSidebar";
+import DashboardSidebar from "./DashboardSidebar";
+import { applications, Application } from "./applications";
 import ApplicationFrame from "./ApplicationFrame";
 import { useIsMobile } from "@/hooks/use-mobile";
 
