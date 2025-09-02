@@ -26,7 +26,7 @@ export const applications: Application[] = [
   {
     id: 'travel',
     title: 'Teacher Travel & Safety Assistant',
-    url: 'https://teachtrav-qftkvv.manus.space/',
+    url: 'https://edupulse-6ddv6u.manus.space/',
     icon: MapPin,
     description: 'Plan safe educational trips and excursions'
   },
