@@ -40,7 +40,7 @@ export const applications: Application[] = [
   {
     id: 'classifier',
     title: 'AI Teacher Classifier',
-    url: 'https://teacher-scout.lovable.app/',
+    url: 'https://v0-teacher-classification-app-iota.vercel.app/',
     icon: Users,
     description: 'Classify and organize teaching resources'
   }
